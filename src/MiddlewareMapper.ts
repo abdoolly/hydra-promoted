@@ -14,6 +14,10 @@ export class MiddlewareMapper implements Mapper {
 
     constructor(private mainProvider: MainProvider) { }
 
+    /**
+     * @description receives the directory which should look like that ex: ./src/middlewares/
+     * @param directory path from the root directory of the project
+     */
     provide(directory: string) {
         this.mapper = this.mainProvider.provide(directory, '.ts');
         return this.mapper;

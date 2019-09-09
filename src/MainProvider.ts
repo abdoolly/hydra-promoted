@@ -98,7 +98,7 @@ export class MainProvider implements Provider {
 
         try {
             // require the module dynamically
-            let module = require(`../../${filePath}`)[
+            let module = require(`../../../${filePath}`)[
                 `${instanceName}`
             ];
             // returning a new object of the module for the modules mapper

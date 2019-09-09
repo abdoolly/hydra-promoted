@@ -10,7 +10,7 @@ export class ControllersMapper implements Mapper {
 
     /**
      * @description receives the directory which should look like that ex: ./src/controllers/
-     * @param directory 
+     * @param directory path from the root directory of the project
      */
     provide(directory: string) {
         // this.mapper = this.mainProvider.provide('./src/middlewares/', '.ts');

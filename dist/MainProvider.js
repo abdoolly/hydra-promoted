@@ -50,7 +50,7 @@ var MainProvider = (function () {
         var splitted = filePath.split('/');
         var instanceName = splitted[splitted.length - 1];
         try {
-            var module_1 = require("../../" + filePath)["" + instanceName];
+            var module_1 = require("../../../" + filePath)["" + instanceName];
             return inversify_manager_1.DIManager.resolveService(module_1);
         }
         catch (err) {
