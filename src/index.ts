@@ -9,7 +9,7 @@ type logFunc = (str: string) => any;
 DIManager.registerServices([
     { service: ControllersMapper, scopeType: 'singleton' },
     { service: MiddlewareMapper, scopeType: 'singleton' },
-    { service: ExpressRouter, scopeType: 'singleton' },
+    { service: ExpressRouter, scopeType: 'transient' },
 ]);
 
 /**
