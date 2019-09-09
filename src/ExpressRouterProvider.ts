@@ -14,11 +14,9 @@ export class ExpressRouter {
     middlewareMapper: { [key: string]: Middleware };
 
     constructor(
-        controllersProvider: ControllersMapper,
-        middlewareProvider: MiddlewareMapper
+        private controllersProvider: ControllersMapper,
+        private middlewareProvider: MiddlewareMapper
     ) {
-        this.controllersMapper = controllersProvider.getMapper();
-        this.middlewareMapper = middlewareProvider.getMapper();
         this.expressRouter = ExpressInstance.Router();
     }
 
@@ -51,6 +49,9 @@ export class ExpressRouter {
         middlewares: string[] | string,
         handlerPath: string,
         method: string) {
+        this.controllersMapper = this.controllersProvider.getMapper();
+        this.middlewareMapper = this.middlewareProvider.getMapper();
+
         // if there were no middlewares
         if (typeof middlewares === 'string' && handlerPath === undefined)
             return this.expressRouter[method](routePath, this.shapeTheControllerFunc(middlewares));

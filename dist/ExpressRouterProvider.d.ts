@@ -2,6 +2,8 @@ import { Router } from 'express';
 import { ControllersMapper } from './ControllersMapper';
 import { MiddlewareMapper, Middleware } from './MiddlewareMapper';
 export declare class ExpressRouter {
+    private controllersProvider;
+    private middlewareProvider;
     expressRouter: Router;
     controllersMapper: any;
     middlewareMapper: {

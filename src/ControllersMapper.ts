@@ -13,7 +13,6 @@ export class ControllersMapper implements Mapper {
      * @param directory path from the root directory of the project
      */
     provide(directory: string) {
-        // this.mapper = this.mainProvider.provide('./src/middlewares/', '.ts');
         this.mapper = this.mainProvider.provide(directory, '.ts');
         return this.mapper;
     }

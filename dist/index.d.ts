@@ -18,3 +18,6 @@ declare const Controllers: ControllersMapper;
 declare const Middlewares: MiddlewareMapper;
 declare const Router: ExpressRouter;
 export { DIManager, Controllers, Middlewares, Router };
+import { AppRequest, AppResponse } from './interfaces/ExpressApp.interface';
+import { UMFMessage } from './interfaces/Hydra.interface';
+export { AppRequest, AppResponse, UMFMessage, IHydra, IHydraExpress };

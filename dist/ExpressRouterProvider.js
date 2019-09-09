@@ -15,8 +15,8 @@ var ControllersMapper_1 = require("./ControllersMapper");
 var MiddlewareMapper_1 = require("./MiddlewareMapper");
 var ExpressRouter = (function () {
     function ExpressRouter(controllersProvider, middlewareProvider) {
-        this.controllersMapper = controllersProvider.getMapper();
-        this.middlewareMapper = middlewareProvider.getMapper();
+        this.controllersProvider = controllersProvider;
+        this.middlewareProvider = middlewareProvider;
         this.expressRouter = index_1.ExpressInstance.Router();
     }
     ExpressRouter.prototype.get = function (routePath, middlewares, handlerPath) {
@@ -33,6 +33,8 @@ var ExpressRouter = (function () {
     };
     ExpressRouter.prototype.registerMethodFunction = function (routePath, middlewares, handlerPath, method) {
         var _this = this;
+        this.controllersMapper = this.controllersProvider.getMapper();
+        this.middlewareMapper = this.middlewareProvider.getMapper();
         if (typeof middlewares === 'string' && handlerPath === undefined)
             return this.expressRouter[method](routePath, this.shapeTheControllerFunc(middlewares));
         if (typeof middlewares === 'string' && handlerPath && this.isValidMiddleware(middlewares))

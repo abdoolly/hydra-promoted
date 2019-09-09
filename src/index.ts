@@ -42,3 +42,10 @@ const Middlewares = DIManager.getService(MiddlewareMapper);
 const Router = DIManager.getService(ExpressRouter);
 
 export { DIManager, Controllers, Middlewares, Router };
+
+/**
+ * exporting the interfaces that could be needed in the app
+ */
+import { AppRequest, AppResponse } from './interfaces/ExpressApp.interface';
+import { UMFMessage } from './interfaces/Hydra.interface';
+export { AppRequest, AppResponse, UMFMessage, IHydra, IHydraExpress };
