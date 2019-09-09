@@ -12,8 +12,11 @@ export interface Middleware {
 export class MiddlewareMapper implements Mapper {
     private mapper: { [key: string]: Middleware };
 
-    constructor(mainProvider: MainProvider) {
-        this.mapper = mainProvider.provide('./src/middlewares/', '.ts');
+    constructor(private mainProvider: MainProvider) { }
+
+    provide(directory: string) {
+        this.mapper = this.mainProvider.provide(directory, '.ts');
+        return this.mapper;
     }
 
     getMapper() {
