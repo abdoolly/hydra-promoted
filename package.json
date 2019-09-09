@@ -1,0 +1,24 @@
+{
+  "name": "hydra-promoted",
+  "version": "1.0.0",
+  "description": "A package to be used along hydra to provide middlware and controllers with dependency injection capabilities",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "repository": "https://github.com/abdoolly/hydra-promoted",
+  "author": "Abdallah Gamal",
+  "license": "MIT",
+  "scripts": {
+    "build": "tsc"
+  },
+  "dependencies": {
+    "fwsp-server-response": "^2.2.6",
+    "glob": "^7.1.4",
+    "hydra-express": "^1.7.1",
+    "inversify-manager": "^1.0.3"
+  },
+  "devDependencies": {
+    "@types/glob": "^7.1.1",
+    "@types/node": "^12.7.4",
+    "reflect-metadata": "^0.1.13"
+  }
+}

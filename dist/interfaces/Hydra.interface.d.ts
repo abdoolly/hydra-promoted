@@ -1,0 +1,141 @@
+/// <reference types="node" />
+import { EventEmitter } from 'events';
+export interface Hydra extends EventEmitter {
+    mcMessageChannelClient: any;
+    mcDirectMessageChannelClient: any;
+    messageChannelPool: any;
+    config: any;
+    serviceName: string;
+    serviceDescription: string;
+    serviceVersion: string;
+    isService: boolean;
+    initialized: boolean;
+    redisdb: any;
+    registeredRoutes: any[];
+    registeredPlugins: any[];
+    init(config: any | string, testMode: boolean): any;
+    use(...plugins: any[]): any;
+    shutdown(): any;
+    registerService(): any;
+    getServiceName(): any;
+    getServices(): any;
+    getServiceNodes(): any;
+    findService(name: any): any;
+    getServicePresence(name: any): any;
+    getInstanceID(): any;
+    getInstanceVersion(): any;
+    getHealth(): any;
+    sendToHealthLog(type: any, message: any, suppressEmit: any): any;
+    getServiceHealthLog(name: any): any;
+    getServiceHealthAll(): any;
+    createUMFMessage(message: any): any;
+    makeAPIRequest(message: any, sendOpts: any): any;
+    sendMessage(message: any): any;
+    sendReplyMessage(originalMessage: any, messageResponse: any): any;
+    sendBroadcastMessage(message: any): any;
+    registerRoutes(routes: any): any;
+    getAllServiceRoutes(): any;
+    matchRoute(routePath: any): any;
+    queueMessage(message: any): any;
+    getQueuedMessage(serviceName: any): any;
+    markQueueMessage(message: any, completed: any, reason: any): any;
+    getConfig(label: any): any;
+    putConfig(label: any, config: any): any;
+    listConfig(serviceName: any): any;
+    hasServicePresence(name: any): any;
+    getClonedRedisClient(): any;
+    getUMFMessageHelper(): any;
+    getServerRequestHelper(): any;
+    getServerResponseHelper(): any;
+    getUtilsHelper(): any;
+    getConfigHelper(): any;
+}
+export interface HydraExpress {
+    config: any;
+    server: any;
+    testMode: boolean;
+    appLogger: any;
+    registeredPlugins: any[];
+    init(config: any, version: string, registerRoutesCallback: Function, registerMiddlewareCallback?: Function): Promise<any>;
+    shutdown(): Promise<any>;
+    getExpress(): any;
+    getHydra(): Hydra;
+    getRuntimeConfig(): any;
+    log(type: string | 'fatal' | 'error' | 'debug' | 'info', str: string): undefined;
+    registerRoutes(routes: {
+        [key: string]: string;
+    }): undefined;
+    sendResponse(httpCode: number, res: any, data: any): undefined;
+    use(...plugins: any[]): any;
+    validateConfig(config: any): any;
+    start(resolve: any, _reject: any): undefined;
+    initService(): undefined;
+}
+export interface UMFMessage {
+    to: string;
+    from: string;
+    body: any;
+}
+interface StatusArray {
+    [key: string]: [string, string];
+}
+export interface FWSPServerResponse {
+    setTestMode(): undefined;
+    enableCORS(state: any): undefined;
+    createResponseObject(httpCode: any, resultPayload: any): any;
+    sendResponse(code: any, res: any, data: any): any;
+    sendOk(res: any, data: any): any;
+    sendCreated(res: any, data: any): any;
+    sendMovedPermanently(res: any, data: any): any;
+    sendInvalidRequest(res: any, data: any): any;
+    sendInvalidUserCredentials(res: any, data: any): any;
+    sendPaymentRequired(res: any, data: any): any;
+    sendNotFound(res: any, data: any): any;
+    sendInvalidSession(res: any, data: any): any;
+    sendRequestFailed(res: any, data: any): any;
+    sendDataConflict(res: any, data: any): any;
+    sendTooLarge(res: any, data: any): any;
+    sendTooManyRequests(res: any, data: any): any;
+    sendServerError(res: any, data: any): any;
+    sendInternalError(res: any, data: any): any;
+    sendMethodNotImplemented(res: any, data: any): any;
+    sendUnavailableError(res: any, data: any): any;
+    sendUnavailableError(res: any, data: any): any;
+    HTTP_OK: number;
+    HTTP_CREATED: number;
+    HTTP_MOVED_PERMANENTLY: number;
+    HTTP_BAD_REQUEST: number;
+    HTTP_UNAUTHORIZED: number;
+    HTTP_PAYMENT_REQUIRED: number;
+    HTTP_NOT_FOUND: number;
+    HTTP_METHOD_NOT_ALLOWED: number;
+    NOT_ACCEPTABLE: number;
+    HTTP_CONFLICT: number;
+    HTTP_TOO_LARGE: number;
+    HTTP_TOO_MANY_REQUEST: number;
+    HTTP_SERVER_ERROR: number;
+    HTTP_METHOD_NOT_IMPLEMENTED: number;
+    HTTP_CONNECTION_REFUSED: number;
+    HTTP_SERVICE_UNAVAILABLE: number;
+    STATUSMESSAGE: number;
+    STATUSDESCRIPTION: number;
+    STATUS: {
+        '200': StatusArray;
+        '201': StatusArray;
+        '301': StatusArray;
+        '400': StatusArray;
+        '401': StatusArray;
+        '402': StatusArray;
+        '404': StatusArray;
+        '405': StatusArray;
+        '406': StatusArray;
+        '409': StatusArray;
+        '413': StatusArray;
+        '429': StatusArray;
+        '500': StatusArray;
+        '501': StatusArray;
+        '502': StatusArray;
+        '503': StatusArray;
+    };
+}
+export {};
