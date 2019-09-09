@@ -6,8 +6,12 @@ export interface Middleware {
     handle: (req: AppRequest, res: AppResponse, next: Function) => any;
 }
 export declare class MiddlewareMapper implements Mapper {
+    private mainProvider;
     private mapper;
     constructor(mainProvider: MainProvider);
+    provide(directory: string): {
+        [key: string]: Middleware;
+    };
     getMapper(): {
         [key: string]: Middleware;
     };

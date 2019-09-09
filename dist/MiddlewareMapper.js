@@ -13,8 +13,12 @@ var inversify_1 = require("inversify");
 var MainProvider_1 = require("./MainProvider");
 var MiddlewareMapper = (function () {
     function MiddlewareMapper(mainProvider) {
-        this.mapper = mainProvider.provide('./src/middlewares/', '.ts');
+        this.mainProvider = mainProvider;
     }
+    MiddlewareMapper.prototype.provide = function (directory) {
+        this.mapper = this.mainProvider.provide(directory, '.ts');
+        return this.mapper;
+    };
     MiddlewareMapper.prototype.getMapper = function () {
         return this.mapper;
     };
