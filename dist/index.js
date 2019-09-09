@@ -5,10 +5,12 @@ exports.DIManager = inversify_manager_1.DIManager;
 var ControllersMapper_1 = require("./ControllersMapper");
 var MiddlewareMapper_1 = require("./MiddlewareMapper");
 var ExpressRouterProvider_1 = require("./ExpressRouterProvider");
+var MainProvider_1 = require("./MainProvider");
 inversify_manager_1.DIManager.registerServices([
+    { service: MainProvider_1.MainProvider, scopeType: 'singleton' },
     { service: ControllersMapper_1.ControllersMapper, scopeType: 'singleton' },
     { service: MiddlewareMapper_1.MiddlewareMapper, scopeType: 'singleton' },
-    { service: ExpressRouterProvider_1.ExpressRouter, scopeType: 'singleton' },
+    { service: ExpressRouterProvider_1.ExpressRouter, scopeType: 'transient' },
 ]);
 exports.HydraExpress = require('hydra-express');
 exports.ExpressInstance = exports.HydraExpress.getExpress();

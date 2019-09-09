@@ -3,10 +3,12 @@ import { FWSPServerResponse, Hydra as IHydra, HydraExpress as IHydraExpress } fr
 import { ControllersMapper } from './ControllersMapper';
 import { MiddlewareMapper } from './MiddlewareMapper';
 import { ExpressRouter } from './ExpressRouterProvider';
+import { MainProvider } from './MainProvider';
 type logFunc = (str: string) => any;
 
 // registering the main services which is going to be needed in the next steps
 DIManager.registerServices([
+    { service: MainProvider, scopeType: 'singleton' },
     { service: ControllersMapper, scopeType: 'singleton' },
     { service: MiddlewareMapper, scopeType: 'singleton' },
     { service: ExpressRouter, scopeType: 'transient' },
