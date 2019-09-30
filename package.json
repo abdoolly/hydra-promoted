@@ -1,6 +1,6 @@
 {
   "name": "hydra-promoted",
-  "version": "1.0.14",
+  "version": "2.0.1",
   "description": "A package to be used along with hydra-express to provide middlewares and controllers with string notation and provide dependency injection capabilties",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -15,7 +15,7 @@
   "dependencies": {
     "fwsp-server-response": "^2.2.6",
     "glob": "^7.1.4",
-    "hydra-express": "^1.7.1",
+    "hydra-promoted-express": "^1.0.2",
     "inversify-manager": "^1.0.3"
   },
   "devDependencies": {
