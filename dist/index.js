@@ -6,18 +6,28 @@ var ControllersMapper_1 = require("./ControllersMapper");
 var MiddlewareMapper_1 = require("./MiddlewareMapper");
 var ExpressRouterProvider_1 = require("./ExpressRouterProvider");
 var MainProvider_1 = require("./MainProvider");
+// registering the main services which is going to be needed in the next steps
 inversify_manager_1.DIManager.registerServices([
     { service: MainProvider_1.MainProvider, scopeType: 'singleton' },
     { service: ControllersMapper_1.ControllersMapper, scopeType: 'singleton' },
     { service: MiddlewareMapper_1.MiddlewareMapper, scopeType: 'singleton' },
     { service: ExpressRouterProvider_1.ExpressRouter, scopeType: 'transient' },
 ]);
-exports.HydraExpress = require('hydra-express');
+/**
+ * making this to ease out importing the hydra express and turning it like a typescript import
+ */
+exports.HydraExpress = require('hydra-promoted-express');
 exports.ExpressInstance = exports.HydraExpress.getExpress();
 exports.Hydra = exports.HydraExpress.getHydra();
-var Logger = (function () {
+/**
+ * @description logger class to ease out the logging capability inside hydra express
+ */
+var Logger = /** @class */ (function () {
     function Logger() {
     }
+    /**
+     * @description using the lambda to curry the log function
+     */
     Logger.info = function (str) { return exports.HydraExpress.log('info', str); };
     Logger.debug = function (str) { return exports.HydraExpress.log('debug', str); };
     Logger.fatal = function (str) { return exports.HydraExpress.log('fatal', str); };

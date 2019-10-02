@@ -1,6 +1,9 @@
 import { Router } from 'express';
 import { ControllersMapper } from './ControllersMapper';
 import { MiddlewareMapper, Middleware } from './MiddlewareMapper';
+/**
+ * @description this class acts as a repository for the main methods which are used in the express router
+ */
 export declare class ExpressRouter {
     private controllersProvider;
     private middlewareProvider;
@@ -24,5 +27,10 @@ export declare class ExpressRouter {
     private isValidMiddleware;
     private shapeTheControllerFunc;
     private getTheControllerFunc;
+    /**
+     * @description this function overrides the res.send and res.render to be able to put layer after the controller
+     * makes its response
+     * @param res
+     */
     private overrideRes;
 }

@@ -9,6 +9,10 @@ export declare class MiddlewareMapper implements Mapper {
     private mainProvider;
     private mapper;
     constructor(mainProvider: MainProvider);
+    /**
+     * @description receives the directory which should look like that ex: ./src/middlewares/
+     * @param directory path from the root directory of the project
+     */
     provide(directory: string): {
         [key: string]: Middleware;
     };

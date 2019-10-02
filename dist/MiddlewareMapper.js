@@ -11,10 +11,14 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var inversify_1 = require("inversify");
 var MainProvider_1 = require("./MainProvider");
-var MiddlewareMapper = (function () {
+var MiddlewareMapper = /** @class */ (function () {
     function MiddlewareMapper(mainProvider) {
         this.mainProvider = mainProvider;
     }
+    /**
+     * @description receives the directory which should look like that ex: ./src/middlewares/
+     * @param directory path from the root directory of the project
+     */
     MiddlewareMapper.prototype.provide = function (directory) {
         this.mapper = this.mainProvider.provide(directory, '.ts');
         return this.mapper;

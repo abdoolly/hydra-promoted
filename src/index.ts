@@ -17,7 +17,7 @@ DIManager.registerServices([
 /**
  * making this to ease out importing the hydra express and turning it like a typescript import
  */
-export const HydraExpress: IHydraExpress = require('hydra-express');
+export const HydraExpress: IHydraExpress = require('hydra-promoted-express');
 export const ExpressInstance = HydraExpress.getExpress();
 export const Hydra: IHydra = HydraExpress.getHydra();
 

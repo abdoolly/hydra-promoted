@@ -159,7 +159,7 @@ export interface Hydra extends EventEmitter {
      * @return {promise} promise - response from API in resolved promise or
      *                   error in rejected promise.
      */
-    makeAPIRequest(message, sendOpts: any);
+    makeAPIRequest(message, sendOpts?: any);
 
     /**
      * @name sendMessage

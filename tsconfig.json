@@ -5,9 +5,12 @@
     "sourceMap": true,
     "rootDir": "./src",
     "outDir": "./dist" /* Redirect output structure to the directory. */,
-    "removeComments": true /* Do not emit comments to output. */,
+    "removeComments": false /* Do not emit comments to output. */,
     "noImplicitAny": false,
-    "types": ["reflect-metadata", "node"],
+    "types": [
+      "reflect-metadata",
+      "node"
+    ],
     "strict": true /* Enable all strict type-checking options. */,
     "strictNullChecks": false /* Enable strict null checks. */,
     "alwaysStrict": true /* Parse in strict mode and emit "use strict" for each source file. */,
@@ -20,6 +23,11 @@
     "strictPropertyInitialization": false,
     "declaration": true
   },
-  "exclude": ["dist", "node_modules"],
-  "include": ["./src/**/*"]
+  "exclude": [
+    "dist",
+    "node_modules"
+  ],
+  "include": [
+    "./src/**/*"
+  ]
 }

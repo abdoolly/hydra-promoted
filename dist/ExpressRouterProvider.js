@@ -13,7 +13,10 @@ var inversify_1 = require("inversify");
 var index_1 = require("./index");
 var ControllersMapper_1 = require("./ControllersMapper");
 var MiddlewareMapper_1 = require("./MiddlewareMapper");
-var ExpressRouter = (function () {
+/**
+ * @description this class acts as a repository for the main methods which are used in the express router
+ */
+var ExpressRouter = /** @class */ (function () {
     function ExpressRouter(controllersProvider, middlewareProvider) {
         this.controllersProvider = controllersProvider;
         this.middlewareProvider = middlewareProvider;
@@ -35,10 +38,13 @@ var ExpressRouter = (function () {
         var _this = this;
         this.controllersMapper = this.controllersProvider.getMapper();
         this.middlewareMapper = this.middlewareProvider.getMapper();
+        // if there were no middlewares
         if (typeof middlewares === 'string' && handlerPath === undefined)
             return this.expressRouter[method](routePath, this.shapeTheControllerFunc(middlewares));
+        // if there is a single middleware 
         if (typeof middlewares === 'string' && handlerPath && this.isValidMiddleware(middlewares))
             return this.expressRouter[method](routePath, this.middlewareMapper[middlewares].handle, this.shapeTheControllerFunc(handlerPath));
+        // if there are multi middlewares 
         if (Array.isArray(middlewares) && typeof handlerPath === 'string') {
             var funcMiddlewares = middlewares.map(function (name) {
                 if (_this.isValidMiddleware(name))
@@ -66,11 +72,14 @@ var ExpressRouter = (function () {
         throw Error("Middleware name " + middlewareName + " is not valid or does not exist please use the name property to make your middleware name");
     };
     ExpressRouter.prototype.shapeTheControllerFunc = function (callbackString) {
+        // validate its a valid callback string
         var splittedCB = callbackString.split('@');
+        // validating the string
         if (splittedCB.length !== 2) {
             throw Error("Invalid callback string " + callbackString + " it should be \"controller@functionName\"");
         }
         var controllerPath = splittedCB[0], functionName = splittedCB[1];
+        // if the controller does not exist
         if (!this.controllersMapper[controllerPath])
             throw Error("Controller: " + controllerPath + " does not exist");
         if (!this.controllersMapper[controllerPath][functionName])
@@ -85,30 +94,44 @@ var ExpressRouter = (function () {
                 args[_i] = arguments[_i];
             }
             var req = args[0], res = args[1];
+            // overriding the res object
             _this.overrideRes(res);
+            // apply try and catch directly above the controller function
             try {
+                // TODO: apply validators here
+                // this function could be async or not
                 return controllerClosure.bind(controllerContext).apply(void 0, args);
             }
             catch (err) {
                 console.log('err', err);
+                // TODO: global error handler here
             }
         };
     };
+    /**
+     * @description this function overrides the res.send and res.render to be able to put layer after the controller
+     * makes its response
+     * @param res
+     */
     ExpressRouter.prototype.overrideRes = function (res) {
         var oldSend = res.send;
         var oldRender = res.render;
+        // overriding the send function
         res.send = function () {
             var params = [];
             for (var _i = 0; _i < arguments.length; _i++) {
                 params[_i] = arguments[_i];
             }
+            // TODO: call the auditing utility here
             return oldSend.apply(res, params);
         };
+        // overriding the render function
         res.render = function () {
             var params = [];
             for (var _i = 0; _i < arguments.length; _i++) {
                 params[_i] = arguments[_i];
             }
+            // TODO: call the auditing utility here
             return oldRender.apply(res, params);
         };
         return res;
