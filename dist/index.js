@@ -43,4 +43,7 @@ var Middlewares = inversify_manager_1.DIManager.getService(MiddlewareMapper_1.Mi
 exports.Middlewares = Middlewares;
 var Router = inversify_manager_1.DIManager.getService(ExpressRouterProvider_1.ExpressRouter);
 exports.Router = Router;
+var ApiRequest_1 = require("./ApiRequest");
+exports.HydraApiRequest = ApiRequest_1.HydraApiRequest;
+exports.HydraSecureApiRequest = ApiRequest_1.HydraSecureApiRequest;
 //# sourceMappingURL=index.js.map

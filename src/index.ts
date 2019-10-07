@@ -1,7 +1,7 @@
 import { DIManager } from 'inversify-manager';
 import { FWSPServerResponse, Hydra as IHydra, HydraExpress as IHydraExpress } from './interfaces/Hydra.interface';
 import { ControllersMapper } from './ControllersMapper';
-import { MiddlewareMapper } from './MiddlewareMapper';
+import { MiddlewareMapper, Middleware } from './MiddlewareMapper';
 import { ExpressRouter } from './ExpressRouterProvider';
 import { MainProvider } from './MainProvider';
 type logFunc = (str: string) => any;
@@ -48,4 +48,18 @@ export { DIManager, Controllers, Middlewares, Router };
  */
 import { AppRequest, AppResponse } from './interfaces/ExpressApp.interface';
 import { UMFMessage } from './interfaces/Hydra.interface';
-export { AppRequest, AppResponse, UMFMessage, IHydra, IHydraExpress };
+import { HydraApiRequest, HydraSecureApiRequest } from './ApiRequest';
+import { RequestMsg, SecureRequestMsg, ApiResult } from './interfaces/RequestMsg';
+export {
+    AppRequest,
+    AppResponse,
+    UMFMessage,
+    IHydra,
+    IHydraExpress,
+    HydraApiRequest,
+    HydraSecureApiRequest,
+    Middleware,
+    RequestMsg,
+    SecureRequestMsg,
+    ApiResult
+};
