@@ -195,6 +195,112 @@ export  class  ExampleController  {
 
 as easy as that your service instance exists with you in the controller also a service can also be injected in another service.
 
+ ## Making API requests
+
+This section will explain how to make api requests to other hydra services 
+since hydra provide load balancing if we have multiple services of the same service.
+
+we have two methods for making api requests 
+
+### HydraApiRequest
+
+This method is the normal way of requesting we just give it a UMF message 
+and then it will send the request 
+
+you can check the UMF message format docs [here]([https://github.com/cjus/umf](https://github.com/cjus/umf)).
+
+#### Example 
+
+```
+import { HydraApiRequest } from 'hydra-promoted';
+
+let result = await HydraApiRequest({
+	body:  { message: 'some data'},
+	to:'serviceName:[method]/route/path'
+});
+``` 
+
+and the response will just be a json object that looks like that 
+
+```
+{
+	headers:  { // response headers here},
+	result:  { // response body },
+	statusCode:  200, 
+	statusDescription:  '',
+	statusMessage:  'Ok'
+}
+```
+**NOTE: this is the response standard shape so , you will always receive something like the above json in any response from a hydra service**
+
+### HydraSecureApiRequest
+
+This is the second method which provides secure encrypted requests between the hydra services using the Rsa encryption.
+
+#### Example
+
+it's usage is exactly similar to the above method but with additional required fields
+which are the public and private key paths.
+
+```
+let  result  =  await  HydraSecureApiRequest({
+	body:  { message : 'some data' },
+	to:  'serviceName:[method]/path/to/router',
+	publicKey:  './public.pem',
+	privateKey:  './private.pem'
+});
+```
+
+as you can see it is the same with additional fields the public and private
+
+Sometimes the private key will have a passphrase so , in such a case the private key property will accept an object instead of a string 
+
+#### Example private key with passphrase
+
+```
+let  result  =  await  HydraSecureApiRequest({
+	body:  { message : 'some data' },
+	to:  'serviceName:[method]/path/to/router',
+	publicKey:  './public.pem',
+	privateKey:  {
+		path: './private.pem',
+		passphrase: 'supersecretpassphrase'
+	}
+});
+```
+
+responses from the HydraSecureApiRequest will exactly the same as the above method as it will handle any decryption needed to be done on the responses.
+
+### Handling Hydra Secure request from the receiver side 
+
+Now you should be asking what if I am the receiver of the request should I handle everything myself in that case we are exposing a middleware which handles all the decryption logic for you as a receiver for the Rsa encrypted request
+
+middleware is called HandleRsaRequest
+#### HandleRsaRequest
+
+this is a normal express middleware which can be used like that 
+
+```
+import { HandleRsaRequest } from 'hydra-promoted';
+
+app.use(HandleRsaRequest('./private.pem'));
+```
+ as you can see it just requires the private key path or object which will handle all the decryption of the request needed for you and you will then receive a normal request as usual.
+
+also this is how you can use in the middleware that we provide
+
+```
+import { HandleRsaRequest } from 'hydra-promoted';
+
+class  HandleRsa  implements  Middleware  {
+	handle(req:  AppRequest,  res:  AppResponse,  next:  Function)  {
+		return  HandleRsaRequest('./private.pem')(req,  res,  next);
+	}
+}
+```
+
+we are just calling the HandleRsaRequest which will return a middleware and we are just passing it the req , res and next that it needs it.
+
 ## Some Important Helpers
 
 Now if you were wondering where is the hydra part in this there you go 
