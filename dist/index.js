@@ -46,4 +46,5 @@ exports.Router = Router;
 var ApiRequest_1 = require("./ApiRequest");
 exports.HydraApiRequest = ApiRequest_1.HydraApiRequest;
 exports.HydraSecureApiRequest = ApiRequest_1.HydraSecureApiRequest;
+exports.HandleRsaRequest = ApiRequest_1.HandleRsaRequest;
 //# sourceMappingURL=index.js.map

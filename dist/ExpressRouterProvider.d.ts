@@ -23,7 +23,7 @@ export declare class ExpressRouter {
     delete(routePath: string, middlewares: string[] | string, handlerPath: string): any;
     private registerMethodFunction;
     use(...handlers: any): any;
-    getRouter(): any;
+    getRouter(): Router;
     private isValidMiddleware;
     private shapeTheControllerFunc;
     private getTheControllerFunc;

@@ -48,7 +48,7 @@ export { DIManager, Controllers, Middlewares, Router };
  */
 import { AppRequest, AppResponse } from './interfaces/ExpressApp.interface';
 import { UMFMessage } from './interfaces/Hydra.interface';
-import { HydraApiRequest, HydraSecureApiRequest } from './ApiRequest';
+import { HydraApiRequest, HydraSecureApiRequest, HandleRsaRequest } from './ApiRequest';
 import { RequestMsg, SecureRequestMsg, ApiResult } from './interfaces/RequestMsg';
 export {
     AppRequest,
@@ -61,5 +61,6 @@ export {
     Middleware,
     RequestMsg,
     SecureRequestMsg,
-    ApiResult
+    ApiResult,
+    HandleRsaRequest
 };

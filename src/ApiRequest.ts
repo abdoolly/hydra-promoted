@@ -1,5 +1,5 @@
-import { Hydra } from ".";
-import { ApiResult, RequestMsg, SecureRequestMsg } from "./interfaces/RequestMsg";
+import { Hydra, AppRequest, AppResponse } from ".";
+import { ApiResult, RequestMsg, SecureRequestMsg, RsaKeyObject } from "./interfaces/RequestMsg";
 import { RsaDecrypt, RsaEncrypt } from "./RsaManager";
 const makeApiRequest = Hydra.makeAPIRequest;
 
@@ -35,4 +35,26 @@ export const HydraSecureApiRequest = async (object: SecureRequestMsg): Promise<A
 
     return response;
 }
+
+/**
+ * @description HandleRsaRequest returns a middleware which handles incoming Rsa encrypted requests and decrypt it 
+ * so that receiving routers may get the request directly
+ * @param privateKeyPath This should be the private key path or object that represent the private key place
+ * @returns middleware function 
+ */
+export const HandleRsaRequest = (privateKeyPath: string | RsaKeyObject) => {
+
+    return async (req: AppRequest, res: AppResponse, next: Function) => {
+        // get the result body
+        let body = req.body;
+
+        // decrypt the body using the current private key of the service
+        let decryptedBody = await RsaDecrypt(body, privateKeyPath);
+
+        // replacing the new decrypted body instead of the body
+        req.body = decryptedBody;
+
+        return next();
+    };
+};
 

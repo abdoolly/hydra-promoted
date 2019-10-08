@@ -93,4 +93,27 @@ exports.HydraSecureApiRequest = function (object) { return __awaiter(_this, void
         }
     });
 }); };
+/**
+ * @description HandleRsaRequest returns a middleware which handles incoming Rsa encrypted requests and decrypt it
+ * so that receiving routers may get the request directly
+ * @param privateKeyPath This should be the private key path or object that represent the private key place
+ * @returns middleware function
+ */
+exports.HandleRsaRequest = function (privateKeyPath) {
+    return function (req, res, next) { return __awaiter(_this, void 0, void 0, function () {
+        var body, decryptedBody;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    body = req.body;
+                    return [4 /*yield*/, RsaManager_1.RsaDecrypt(body, privateKeyPath)];
+                case 1:
+                    decryptedBody = _a.sent();
+                    // replacing the new decrypted body instead of the body
+                    req.body = decryptedBody;
+                    return [2 /*return*/, next()];
+            }
+        });
+    }); };
+};
 //# sourceMappingURL=ApiRequest.js.map
