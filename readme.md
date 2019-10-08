@@ -195,7 +195,7 @@ export  class  ExampleController  {
 
 as easy as that your service instance exists with you in the controller also a service can also be injected in another service.
 
- ## Making API requests
+## Making API requests
 
 This section will explain how to make api requests to other hydra services 
 since hydra provide load balancing if we have multiple services of the same service.
