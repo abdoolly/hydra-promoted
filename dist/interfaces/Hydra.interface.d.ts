@@ -1,5 +1,6 @@
 /// <reference types="node" />
 import { EventEmitter } from 'events';
+import { Application } from 'express';
 export interface Hydra extends EventEmitter {
     mcMessageChannelClient: any;
     mcDirectMessageChannelClient: any;
@@ -287,6 +288,12 @@ export interface HydraExpress {
     testMode: boolean;
     appLogger: any;
     registeredPlugins: any[];
+    /**
+     * @name getExpressApp
+     * @summary Retrieve the ExpressJS app object
+     * @return {object} app - express app object
+     */
+    getExpressApp(): Application;
     /**
      * @name init
      * @summary Initializes the HydraExpress module

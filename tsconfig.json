@@ -28,6 +28,9 @@
     "node_modules"
   ],
   "include": [
-    "./src/**/*"
+    "./src/**/*", "types.d.ts"
+  ],
+  "files": [
+    "types.d.ts"
   ]
 }

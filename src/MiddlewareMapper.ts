@@ -1,7 +1,7 @@
 import { injectable } from "inversify";
 import { MainProvider } from './MainProvider';
 import { Mapper } from "./interfaces/App.interface";
-import { AppResponse, AppRequest } from "./interfaces/ExpressApp.interface";
+import { Response as AppResponse, Request as AppRequest } from "express";
 
 export interface Middleware {
     name?: string;
