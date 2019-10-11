@@ -54,8 +54,8 @@ then assuming you are in a typescript project add those lines to your app.ts
 import { Controllers , Middlewares } from 'hydra-promoted';
 
 // use it like that
-Controllers.provide('./src/controllers/');
-Middlewares.provide('./src/middlewares/');
+Controllers.provide(path.resolve(`${__dirname}/controllers`));
+Middlewares.provide(path.resolve(`${__dirname}/middlewares`));
 
 ```
 

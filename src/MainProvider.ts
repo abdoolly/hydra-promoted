@@ -12,14 +12,24 @@ export class MainProvider implements Provider {
         this.Directory = directory;
         this.Extension = extension;
 
-        // getting all modules and their directory
-        let modulePaths = globSync(
-            `${this.Directory}/**/**${
-            this.Extension
-            }`
-        );
+        let modulePaths = this.getFilesInDirectory('.ts');
+        this.Extension = '.ts';
+
+        if (modulePaths.length === 0) {
+            modulePaths = this.getFilesInDirectory('.js');
+            this.Extension = '.js';
+        }
 
         return this.doPathOperations(modulePaths);
+    }
+
+    getFilesInDirectory(extension: string) {
+        // getting all modules and their directory
+        return globSync(
+            `${this.Directory}/**/**${
+            extension
+            }`
+        );
     }
 
     private doPathOperations(paths: string[]) {
@@ -59,11 +69,8 @@ export class MainProvider implements Provider {
  * @param filePath
  */
     private removeExtensionsInFilePath(filePath: string): string {
-        const removeDotSlash = new RegExp(/\.\//);
-        const removeExtension = new RegExp(`${this.Extension}`);
         return filePath
-            .replace(removeExtension, '')
-            .replace(removeDotSlash, '');
+            .replace(this.Extension, '');
     }
 
     /**
@@ -79,9 +86,15 @@ export class MainProvider implements Provider {
         );
 
         const removeDirectoryPath = new RegExp(`${directory}`);
+
         // removing the main directory name from the modules paths
         // and removing the ./ from the path if they exist
-        return filePath.replace(removeDirectoryPath, '');
+        let newFilePath = filePath.replace(removeDirectoryPath, '');
+
+        // just removing the leading slash for the name of the key to be appropriate
+        if (newFilePath.charAt(0) === '/') newFilePath = newFilePath.substr(1);
+
+        return newFilePath;
     }
 
     /**
@@ -97,10 +110,11 @@ export class MainProvider implements Provider {
         let instanceName = splitted[splitted.length - 1];
 
         try {
-            // require the module dynamically
-            let module = require(`../../../${filePath}`)[
+
+            let module = require(filePath)[
                 `${instanceName}`
             ];
+
             // returning a new object of the module for the modules mapper
             // return new module();
             return DIManager.resolveService(module);

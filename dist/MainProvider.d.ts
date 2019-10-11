@@ -3,6 +3,7 @@ export declare class MainProvider implements Provider {
     private Directory;
     private Extension;
     provide(directory: string, extension: string): {};
+    getFilesInDirectory(extension: string): string[];
     private doPathOperations;
     /**
  * @description get a file path and remove the extension .ts extension

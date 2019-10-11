@@ -15,9 +15,17 @@ var MainProvider = /** @class */ (function () {
     MainProvider.prototype.provide = function (directory, extension) {
         this.Directory = directory;
         this.Extension = extension;
-        // getting all modules and their directory
-        var modulePaths = glob_1.sync(this.Directory + "/**/**" + this.Extension);
+        var modulePaths = this.getFilesInDirectory('.ts');
+        this.Extension = '.ts';
+        if (modulePaths.length === 0) {
+            modulePaths = this.getFilesInDirectory('.js');
+            this.Extension = '.js';
+        }
         return this.doPathOperations(modulePaths);
+    };
+    MainProvider.prototype.getFilesInDirectory = function (extension) {
+        // getting all modules and their directory
+        return glob_1.sync(this.Directory + "/**/**" + extension);
     };
     MainProvider.prototype.doPathOperations = function (paths) {
         var fullPathWithoutExtension = [];
@@ -45,11 +53,8 @@ var MainProvider = /** @class */ (function () {
  * @param filePath
  */
     MainProvider.prototype.removeExtensionsInFilePath = function (filePath) {
-        var removeDotSlash = new RegExp(/\.\//);
-        var removeExtension = new RegExp("" + this.Extension);
         return filePath
-            .replace(removeExtension, '')
-            .replace(removeDotSlash, '');
+            .replace(this.Extension, '');
     };
     /**
  * @description remove the ./ and the main directory path from modules paths
@@ -62,7 +67,11 @@ var MainProvider = /** @class */ (function () {
         var removeDirectoryPath = new RegExp("" + directory);
         // removing the main directory name from the modules paths
         // and removing the ./ from the path if they exist
-        return filePath.replace(removeDirectoryPath, '');
+        var newFilePath = filePath.replace(removeDirectoryPath, '');
+        // just removing the leading slash for the name of the key to be appropriate
+        if (newFilePath.charAt(0) === '/')
+            newFilePath = newFilePath.substr(1);
+        return newFilePath;
     };
     /**
  * @description make a new object from the module and return it
@@ -75,8 +84,7 @@ var MainProvider = /** @class */ (function () {
         // get the module name from the path
         var instanceName = splitted[splitted.length - 1];
         try {
-            // require the module dynamically
-            var module_1 = require("../../../" + filePath)["" + instanceName];
+            var module_1 = require(filePath)["" + instanceName];
             // returning a new object of the module for the modules mapper
             // return new module();
             return inversify_manager_1.DIManager.resolveService(module_1);
