@@ -3,7 +3,7 @@ import { FWSPServerResponse, Hydra as IHydra, HydraExpress as IHydraExpress } fr
 import { ControllersMapper } from './ControllersMapper';
 import { MiddlewareMapper, Middleware } from './MiddlewareMapper';
 import { ExpressRouter } from './ExpressRouterProvider';
-import { Request as AppRequest, Response as AppResponse } from 'express';
+import { Request, Response } from 'express';
 declare type logFunc = (str: string) => any;
 /**
  * making this to ease out importing the hydra express and turning it like a typescript import
@@ -34,4 +34,7 @@ export { DIManager, Controllers, Middlewares, Router };
 import { UMFMessage } from './interfaces/Hydra.interface';
 import { HydraApiRequest, HydraSecureApiRequest, HandleRsaRequest } from './ApiRequest';
 import { RequestMsg, SecureRequestMsg, ApiResult } from './interfaces/RequestMsg';
+import { Req, Res } from './interfaces/ExpressApp.interface';
+declare type AppRequest = Req & Request;
+declare type AppResponse = Res & Response;
 export { AppRequest, AppResponse, UMFMessage, IHydra, IHydraExpress, HydraApiRequest, HydraSecureApiRequest, Middleware, RequestMsg, SecureRequestMsg, ApiResult, HandleRsaRequest };

@@ -4,7 +4,7 @@ import { ControllersMapper } from './ControllersMapper';
 import { MiddlewareMapper, Middleware } from './MiddlewareMapper';
 import { ExpressRouter } from './ExpressRouterProvider';
 import { MainProvider } from './MainProvider';
-import { Request as AppRequest, Response as AppResponse } from 'express';
+import { Request, Response } from 'express';
 type logFunc = (str: string) => any;
 
 // registering the main services which is going to be needed in the next steps
@@ -13,7 +13,7 @@ DIManager.registerServices([
     { service: ControllersMapper, scopeType: 'singleton' },
     { service: MiddlewareMapper, scopeType: 'singleton' },
     { service: ExpressRouter, scopeType: 'transient' },
-]); 
+]);
 
 /**
  * making this to ease out importing the hydra express and turning it like a typescript import
@@ -50,6 +50,11 @@ export { DIManager, Controllers, Middlewares, Router };
 import { UMFMessage } from './interfaces/Hydra.interface';
 import { HydraApiRequest, HydraSecureApiRequest, HandleRsaRequest } from './ApiRequest';
 import { RequestMsg, SecureRequestMsg, ApiResult } from './interfaces/RequestMsg';
+import { Req, Res } from './interfaces/ExpressApp.interface';
+
+type AppRequest = Req & Request;
+type AppResponse = Res & Response;
+
 export {
     AppRequest,
     AppResponse,

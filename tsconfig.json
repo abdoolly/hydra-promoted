@@ -29,8 +29,5 @@
   ],
   "include": [
     "./src/**/*", "types.d.ts"
-  ],
-  "files": [
-    "types.d.ts"
   ]
 }
