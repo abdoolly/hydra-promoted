@@ -85,7 +85,7 @@ export class ExpressRouter {
         if (this.middlewareMapper[middlewareName])
             return true;
 
-        throw Error(`Middleware name ${middlewareName} is not valid or does not exist please use the name property to make your middleware name`);
+        throw Error(`Middleware name ${middlewareName} is not valid or does not exist please make sure it's registered in the middleware provider array`);
     }
 
     private shapeTheControllerFunc(callbackString: string) {
@@ -103,7 +103,7 @@ export class ExpressRouter {
 
         // if the controller does not exist
         if (!this.controllersMapper[controllerPath])
-            throw Error(`Controller: ${controllerPath} does not exist`);
+            throw Error(`Controller: ${controllerPath} does not exist please make sure the controller is registered in the controller provider array`);
 
         if (!this.controllersMapper[controllerPath][functionName])
             throw Error(`Function: ${functionName} does not exist in Controller: ${controllerPath}`);
