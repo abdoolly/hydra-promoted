@@ -3,7 +3,6 @@ import { MainProvider } from './MainProvider';
 import { Mapper, ProviderInstanceObject } from "./interfaces/App.interface";
 import { Response as AppResponse, Request as AppRequest } from "express";
 export interface Middleware {
-    name?: string;
     handle: (req: AppRequest, res: AppResponse, next: Function) => any;
 }
 export declare class MiddlewareMapper implements Mapper {
