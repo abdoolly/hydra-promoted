@@ -19,8 +19,8 @@ var MiddlewareMapper = /** @class */ (function () {
      * @description receives the directory which should look like that ex: ./src/middlewares/
      * @param directory path from the root directory of the project
      */
-    MiddlewareMapper.prototype.provide = function (directory) {
-        this.mapper = this.mainProvider.provide(directory, '.ts');
+    MiddlewareMapper.prototype.provide = function (middlewares) {
+        this.mapper = this.mainProvider.provide(middlewares);
         return this.mapper;
     };
     MiddlewareMapper.prototype.getMapper = function () {

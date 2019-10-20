@@ -19,8 +19,8 @@ var ControllersMapper = /** @class */ (function () {
      * @description receives the directory which should look like that ex: ./src/controllers/
      * @param directory path from the root directory of the project
      */
-    ControllersMapper.prototype.provide = function (directory) {
-        this.mapper = this.mainProvider.provide(directory, '.ts');
+    ControllersMapper.prototype.provide = function (controllers) {
+        this.mapper = this.mainProvider.provide(controllers);
         return this.mapper;
     };
     ControllersMapper.prototype.getMapper = function () {

@@ -9,7 +9,8 @@
     "noImplicitAny": false,
     "types": [
       "reflect-metadata",
-      "node"
+      "node",
+      "jest"
     ],
     "strict": true /* Enable all strict type-checking options. */,
     "strictNullChecks": false /* Enable strict null checks. */,
@@ -28,6 +29,7 @@
     "node_modules"
   ],
   "include": [
-    "./src/**/*", "types.d.ts"
+    "./src/**/*",
+    "types.d.ts"
   ]
 }

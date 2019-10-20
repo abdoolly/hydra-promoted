@@ -1,6 +1,6 @@
-import { injectable } from "inversify";
+import { injectable, interfaces } from "inversify";
 import { MainProvider } from './MainProvider';
-import { Mapper } from "./interfaces/App.interface";
+import { Mapper, ProviderInstanceObject } from "./interfaces/App.interface";
 import { Response as AppResponse, Request as AppRequest } from "express";
 
 export interface Middleware {
@@ -18,8 +18,8 @@ export class MiddlewareMapper implements Mapper {
      * @description receives the directory which should look like that ex: ./src/middlewares/
      * @param directory path from the root directory of the project
      */
-    provide(directory: string) {
-        this.mapper = this.mainProvider.provide(directory, '.ts');
+    provide(middlewares: (ProviderInstanceObject | interfaces.Newable<any>)[]) {
+        this.mapper = this.mainProvider.provide(middlewares);
         return this.mapper;
     }
 
