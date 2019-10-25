@@ -1,5 +1,7 @@
 # Hydra Promoted
 
+[![npm version](https://badge.fury.io/js/hydra-promoted.svg)](https://badge.fury.io/js/hydra-promoted)
+
 This package wraps hydra express and it's all built in typescript it offers
 hydra and hydra express interfaces , controllers , middlewares and dependency injection capabilities
 
