@@ -45,24 +45,49 @@ Now make sure in your tsconfig.json you have enabled the decorators , emitted th
 ### Controllers and Middlewares
 
 using hydra-promoted allows you to have controllers in express
-so , for example if your code is inside directory called `src` 
+so , for example if your code is inside directory called `src`
 
 create a folder called `controllers` and another folder called `middlewares` inside it.
 then assuming you are in a typescript project add those lines to your app.ts
 
+In this version we have renewed how you can initialize the controllers and middlewares to prevent dynamic imports since it makes some problems if you are using something like webpack for example 
+
+so here is the new way to initialize the controllers and middlewares 
+
 ```
 import { Controllers , Middlewares } from 'hydra-promoted';
+import { AuthMiddleware } from './middlewares';
+import { ExampleController } from './controllers';
 
 // use it like that
-Controllers.provide(path.resolve(`${__dirname}/controllers`));
-Middlewares.provide(path.resolve(`${__dirname}/middlewares`));
+Controllers.provide([
+    ExampleController
+	or 
+	{ instance: ExampleController , name: 'TestController' }
+]);
 
+Middlewares.provide([
+	AuthMiddleware
+	or 
+	{ instance: AuthMiddleware , name: 'TestMiddleware' }
+]);
 ```
+the above lines registers your controllers and middlewares that are in those arrays
+so , they can be used later using the Routers.
 
-the above lines tell hydra to go to those folders and create instances of the controllers and middlewares and put them on objects by their names and paths
-to be able to use later when using the Routers.
+**IMPORTANT NOTE**
+When putting the controller instance like that this will be it's name to be used in making the routers to them .
+
+and note here this is another way to change the instance name if there are two middlewares with the same name you can use this way to change a middlewares name. by specifying the instance and the instance name to be used with in the Routers
+` { instance: AuthMiddleware , name: 'TestMiddleware' }`
+
+also it's usually recommended to put the above controller and middleware providers
+in separate config files for example `ControllerRegistery.ts` and `MiddlewaresRegistery.ts`
+
 
 ### Example controller
+
+**NOTE** do not forget to register the controller in the controllers provider as explained above
 
 A Controller should look like that for the provider to be able to use it.
 
@@ -102,11 +127,7 @@ import { AppRequest, AppResponse } from 'hydra-promoted';
 
 @injectable()
 export class TestMiddleware {
-	// optional property that could be used to rename the middleware
-	// if does not exist the class name will be used and it will be 			     treated as controllers
-	// in case of nested folders
-	name = 'TestMiddlewareExample';
-
+	
 	handle(req:  AppRequest,  res:  AppResponse,  next:  Function)  {
 		console.log('Hello world Middleware');
 		return  next();
@@ -114,10 +135,10 @@ export class TestMiddleware {
 }
 ```
 
-as you can see above the handle function is the actual middleware
-the `name` property here is an optional property which will be used for using the middleware if it does not exist the class name will be used.
-
 ### Using middlewares
+
+**NOTE** don't forget to register your middleware using the middleware provider mentioned
+in the first section.
 
 middlewares are used like that
 
@@ -125,7 +146,7 @@ middlewares are used like that
 import { Router } from 'hydra-promoted';
 
 // this will register the '/' to go to the example controller and run // the index function.
-Router.get('/', 'TestMiddlewareExample','ExampleController@index');
+Router.get('/', 'TestMiddleware','ExampleController@index');
 
 module.exports  =  Router.getRouter();
 
