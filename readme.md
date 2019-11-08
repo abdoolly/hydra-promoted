@@ -348,3 +348,10 @@ This is a hydra utility for adding service responses.
 `import { ExpressInstance as Express } from 'hydra-promoted';`
 
 This is the express instance which is used inside hydra.
+
+## Release Notes
+
+### 3.1.0
+
+added feature that you can now not only send string handlers that target controllers
+now you can also put functions instead of strings.

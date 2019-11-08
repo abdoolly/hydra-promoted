@@ -1,8 +1,9 @@
 import { Request, Response, Router } from 'express';
 import { injectable } from 'inversify';
-import { ExpressInstance } from './index';
+import { ExpressInstance, AppRequest, AppResponse } from './index';
 import { ControllersMapper } from './ControllersMapper';
 import { MiddlewareMapper, Middleware } from './MiddlewareMapper';
+import { HandlerFunc } from './interfaces/ExpressApp.interface';
 
 /**
  * @description this class acts as a repository for the main methods which are used in the express router
@@ -20,54 +21,77 @@ export class ExpressRouter {
         this.expressRouter = ExpressInstance.Router();
     }
 
+    get(routePath: string, handlerPath: HandlerFunc);
     get(routePath: string, handlerPath: string);
     get(routePath: string, middlewares: string[] | string, handlerPath: string);
-    get(routePath: string, middlewares: string[] | string, handlerPath?: string) {
+    get(routePath: string, middlewares: string[] | string, handlerPath: HandlerFunc);
+    get(routePath: string, middlewares: string[] | string | HandlerFunc, handlerPath?: string | Function) {
         return this.registerMethodFunction(routePath, middlewares, handlerPath, 'get');
     }
 
+    post(routePath: string, handlerPath: HandlerFunc);
     post(routePath: string, handlerPath: string);
     post(routePath: string, middlewares: string[] | string, handlerPath: string);
-    post(routePath: string, middlewares: string[] | string, handlerPath?: string) {
+    post(routePath: string, middlewares: string[] | string, handlerPath: HandlerFunc);
+    post(routePath: string, middlewares: string[] | string | HandlerFunc, handlerPath?: string | Function) {
         return this.registerMethodFunction(routePath, middlewares, handlerPath, 'post');
     }
 
+    put(routePath: string, handlerPath: HandlerFunc);
     put(routePath: string, handlerPath: string);
     put(routePath: string, middlewares: string[] | string, handlerPath: string);
-    put(routePath: string, middlewares: string[] | string, handlerPath?: string): Router {
+    put(routePath: string, middlewares: string[] | string, handlerPath: HandlerFunc);
+    put(routePath: string, middlewares: string[] | string | HandlerFunc, handlerPath?: string | Function): Router {
         return this.registerMethodFunction(routePath, middlewares, handlerPath, 'put');
     }
 
+    delete(routePath: string, handlerPath: HandlerFunc);
     delete(routePath: string, handlerPath: string);
     delete(routePath: string, middlewares: string[] | string, handlerPath: string);
-    delete(routePath: string, middlewares: string[] | string, handlerPath?: string) {
+    delete(routePath: string, middlewares: string[] | string, handlerPath: HandlerFunc);
+    delete(routePath: string, middlewares: string[] | string | HandlerFunc, handlerPath?: string | Function) {
         return this.registerMethodFunction(routePath, middlewares, handlerPath, 'delete');
     }
 
     private registerMethodFunction(
         routePath: string,
-        middlewares: string[] | string,
-        handlerPath: string,
+        middlewares: string[] | string | HandlerFunc,
+        handlerPath: string | Function,
         method: string) {
         this.controllersMapper = this.controllersProvider.getMapper();
         this.middlewareMapper = this.middlewareProvider.getMapper();
 
-        // if there were no middlewares
+        // case no middleware and sending the second paramter as a function
+        if (typeof middlewares === 'function')
+            return this.expressRouter[method](routePath, middlewares);
+
+        // case single middleware and the handler is a function
+        if (typeof middlewares === 'string' && typeof handlerPath === 'function')
+            return this.expressRouter[method](routePath, this.middlewareMapper[middlewares].handle, handlerPath);
+
+        // if there were no middlewares so that the middleware was the handler and it is a string
         if (typeof middlewares === 'string' && handlerPath === undefined)
             return this.expressRouter[method](routePath, this.shapeTheControllerFunc(middlewares));
 
-        // if there is a single middleware 
-        if (typeof middlewares === 'string' && handlerPath && this.isValidMiddleware(middlewares))
+        // if there is a single middleware and handler path is a string
+        if (typeof middlewares === 'string' && typeof handlerPath === 'string' && this.isValidMiddleware(middlewares))
             return this.expressRouter[method](routePath, this.middlewareMapper[middlewares].handle, this.shapeTheControllerFunc(handlerPath));
 
         // if there are multi middlewares 
-        if (Array.isArray(middlewares) && typeof handlerPath === 'string') {
+        if (Array.isArray(middlewares)) {
+
             let funcMiddlewares = middlewares.map((name: string) => {
                 if (this.isValidMiddleware(name))
                     return this.middlewareMapper[name].handle;
             });
 
-            return this.expressRouter[method](routePath, funcMiddlewares, this.shapeTheControllerFunc(handlerPath));
+            // case the handler was a string 
+            if (typeof handlerPath === 'string')
+                return this.expressRouter[method](routePath, funcMiddlewares, this.shapeTheControllerFunc(handlerPath));
+
+            // case the handler was a function 
+            if (typeof handlerPath === 'function')
+                return this.expressRouter[method](routePath, funcMiddlewares, handlerPath);
         }
 
         throw Error('error in registering: method signature is not recognized it');

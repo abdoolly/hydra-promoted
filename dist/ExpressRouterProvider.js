@@ -38,19 +38,30 @@ var ExpressRouter = /** @class */ (function () {
         var _this = this;
         this.controllersMapper = this.controllersProvider.getMapper();
         this.middlewareMapper = this.middlewareProvider.getMapper();
-        // if there were no middlewares
+        // case no middleware and sending the second paramter as a function
+        if (typeof middlewares === 'function')
+            return this.expressRouter[method](routePath, middlewares);
+        // case single middleware and the handler is a function
+        if (typeof middlewares === 'string' && typeof handlerPath === 'function')
+            return this.expressRouter[method](routePath, this.middlewareMapper[middlewares].handle, handlerPath);
+        // if there were no middlewares so that the middleware was the handler and it is a string
         if (typeof middlewares === 'string' && handlerPath === undefined)
             return this.expressRouter[method](routePath, this.shapeTheControllerFunc(middlewares));
-        // if there is a single middleware 
-        if (typeof middlewares === 'string' && handlerPath && this.isValidMiddleware(middlewares))
+        // if there is a single middleware and handler path is a string
+        if (typeof middlewares === 'string' && typeof handlerPath === 'string' && this.isValidMiddleware(middlewares))
             return this.expressRouter[method](routePath, this.middlewareMapper[middlewares].handle, this.shapeTheControllerFunc(handlerPath));
         // if there are multi middlewares 
-        if (Array.isArray(middlewares) && typeof handlerPath === 'string') {
+        if (Array.isArray(middlewares)) {
             var funcMiddlewares = middlewares.map(function (name) {
                 if (_this.isValidMiddleware(name))
                     return _this.middlewareMapper[name].handle;
             });
-            return this.expressRouter[method](routePath, funcMiddlewares, this.shapeTheControllerFunc(handlerPath));
+            // case the handler was a string 
+            if (typeof handlerPath === 'string')
+                return this.expressRouter[method](routePath, funcMiddlewares, this.shapeTheControllerFunc(handlerPath));
+            // case the handler was a function 
+            if (typeof handlerPath === 'function')
+                return this.expressRouter[method](routePath, funcMiddlewares, handlerPath);
         }
         throw Error('error in registering: method signature is not recognized it');
     };
