@@ -355,3 +355,7 @@ This is the express instance which is used inside hydra.
 
 added feature that you can now not only send string handlers that target controllers
 now you can also put functions instead of strings.
+
+### 3.1.1
+
+bug fix where the middleware handle functions were losing context of the middleware class 
