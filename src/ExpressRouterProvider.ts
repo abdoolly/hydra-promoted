@@ -67,7 +67,7 @@ export class ExpressRouter {
 
         // case single middleware and the handler is a function
         if (typeof middlewares === 'string' && typeof handlerPath === 'function')
-            return this.expressRouter[method](routePath, this.middlewareMapper[middlewares].handle, handlerPath);
+            return this.expressRouter[method](routePath, this.middlewareMapper[middlewares].handle.bind(this.middlewareMapper[middlewares]), handlerPath);
 
         // if there were no middlewares so that the middleware was the handler and it is a string
         if (typeof middlewares === 'string' && handlerPath === undefined)
@@ -75,14 +75,14 @@ export class ExpressRouter {
 
         // if there is a single middleware and handler path is a string
         if (typeof middlewares === 'string' && typeof handlerPath === 'string' && this.isValidMiddleware(middlewares))
-            return this.expressRouter[method](routePath, this.middlewareMapper[middlewares].handle, this.shapeTheControllerFunc(handlerPath));
+            return this.expressRouter[method](routePath, this.middlewareMapper[middlewares].handle.bind(this.middlewareMapper[middlewares]), this.shapeTheControllerFunc(handlerPath));
 
         // if there are multi middlewares 
         if (Array.isArray(middlewares)) {
 
             let funcMiddlewares = middlewares.map((name: string) => {
                 if (this.isValidMiddleware(name))
-                    return this.middlewareMapper[name].handle;
+                    return this.middlewareMapper[name].handle.bind(this.middlewareMapper[name]);
             });
 
             // case the handler was a string 
