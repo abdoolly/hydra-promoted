@@ -1,6 +1,6 @@
 {
   "name": "hydra-promoted",
-  "version": "3.1.2",
+  "version": "3.1.3",
   "description": "A package to be used along with hydra-express to provide middlewares and controllers with string notation and provide dependency injection capabilties",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
