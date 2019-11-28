@@ -354,7 +354,13 @@ This is the express instance which is used inside hydra.
 ### 3.1.0
 
 added feature that you can now not only send string handlers that target controllers
-now you can also put functions instead of strings.
+now you can also put functions instead of strings exactly as express
+
+Example 
+
+```
+	Router.get('/path',(req,res) => res.send('I can work with that'));
+```
 
 ### 3.1.1
 
