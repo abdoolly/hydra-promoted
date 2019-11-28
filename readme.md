@@ -359,3 +359,8 @@ now you can also put functions instead of strings.
 ### 3.1.1
 
 bug fix where the middleware handle functions were losing context of the middleware class 
+
+### 3.1.2
+
+bug fix where the controller function error handler catch was not running in the case of a promise 
+function controller now all controller functions are automatically handled

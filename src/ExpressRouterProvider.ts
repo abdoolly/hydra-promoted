@@ -6,6 +6,7 @@ import { MiddlewareMapper, Middleware } from './MiddlewareMapper';
 import { HandlerFunc } from './interfaces/ExpressApp.interface';
 
 /**
+ * koko
  * @description this class acts as a repository for the main methods which are used in the express router
  */
 @injectable()
@@ -136,7 +137,7 @@ export class ExpressRouter {
     }
 
     private getTheControllerFunc(controllerClosure: (req?: Request, res?: Response) => any, controllerContext: any) {
-        return (...args: any[]) => {
+        let controllerFunction = async (...args: any[]) => {
 
             let [req, res] = args;
 
@@ -148,14 +149,21 @@ export class ExpressRouter {
                 // TODO: apply validators here
 
                 // this function could be async or not
-                return controllerClosure.bind(controllerContext)(...args);
+                let result = controllerClosure.bind(controllerContext)(...args);
 
+                // detect if this is a promise
+                if (result && result.then)
+                    return await result;
+
+                return result;
             } catch (err) {
                 console.log('err', err);
                 // TODO: global error handler here
             }
 
         };
+
+        return controllerFunction;
     }
 
     /**
