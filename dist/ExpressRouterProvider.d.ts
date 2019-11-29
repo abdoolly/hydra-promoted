@@ -3,6 +3,7 @@ import { ControllersMapper } from './ControllersMapper';
 import { MiddlewareMapper, Middleware } from './MiddlewareMapper';
 import { HandlerFunc } from './interfaces/ExpressApp.interface';
 /**
+ * koko
  * @description this class acts as a repository for the main methods which are used in the express router
  */
 export declare class ExpressRouter {

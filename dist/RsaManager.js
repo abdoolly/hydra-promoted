@@ -42,12 +42,12 @@ var path_1 = require("path");
 var util_1 = require("util");
 var readFileAsync = util_1.promisify(fs_1.readFile);
 /**
- * @description RsaEncrypt will accept the toEncrypt which is a string form of the data you want to
+ * @description RsaEncryptWithPublic will accept the toEncrypt which is a string form of the data you want to
  * encrypt and return a base65 encoded encrypted data using the public key provided in the seoncd param.
  * @param toEncrypt
  * @param relativeOrAbsolutePathToPublicKey
  */
-exports.RsaEncrypt = function (toEncrypt, publicKeyPath) { return __awaiter(_this, void 0, void 0, function () {
+exports.RsaEncryptWithPublic = function (toEncrypt, publicKeyPath) { return __awaiter(_this, void 0, void 0, function () {
     var absolutePath, publicKey, buffer, encrypted;
     return __generator(this, function (_a) {
         switch (_a.label) {
@@ -63,12 +63,12 @@ exports.RsaEncrypt = function (toEncrypt, publicKeyPath) { return __awaiter(_thi
     });
 }); };
 /**
- * @description RsaDecrypt will accept the encrypted string which will be decrypted using the
+ * @description RsaDecryptWithPrivate will accept the encrypted string which will be decrypted using the
  * private key provided in the second param.
  * @param toDecrypt
  * @param relativeOrAbsolutePathtoPrivateKey
  */
-exports.RsaDecrypt = function (toDecrypt, privateKeyPath) { return __awaiter(_this, void 0, void 0, function () {
+exports.RsaDecryptWithPrivate = function (toDecrypt, privateKeyPath) { return __awaiter(_this, void 0, void 0, function () {
     var path, absolutePath, privateKey, buffer, keyObject, decrypted;
     return __generator(this, function (_a) {
         switch (_a.label) {
@@ -84,6 +84,53 @@ exports.RsaDecrypt = function (toDecrypt, privateKeyPath) { return __awaiter(_th
                 if (typeof privateKeyPath === 'object' && privateKeyPath.passphrase)
                     keyObject.passphrase = privateKeyPath.passphrase;
                 decrypted = crypto_1.privateDecrypt(keyObject, buffer);
+                return [2 /*return*/, decrypted.toString("utf8")];
+        }
+    });
+}); };
+/**
+ * @description RsaEncryptWithPrivate will accept the toEncrypt which is a string form of the data you want to
+ * encrypt and return a base65 encoded encrypted data using the private key provided in the seoncd param.
+ * @param toEncrypt
+ * @param relativeOrAbsolutePathToPrivateKey
+ */
+exports.RsaEncryptWithPrivate = function (toEncrypt, privateKeyPath) { return __awaiter(_this, void 0, void 0, function () {
+    var path, absolutePath, privateKey, keyObject, buffer, encrypted;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                path = typeof privateKeyPath === 'string' ? privateKeyPath : privateKeyPath.path;
+                absolutePath = path_1.resolve(path);
+                return [4 /*yield*/, readFileAsync(absolutePath, "utf8")];
+            case 1:
+                privateKey = _a.sent();
+                keyObject = { key: privateKey };
+                // if there is a passphrase then put it in the key object
+                if (typeof privateKeyPath === 'object' && privateKeyPath.passphrase)
+                    keyObject.passphrase = privateKeyPath.passphrase;
+                buffer = Buffer.from(toEncrypt);
+                encrypted = crypto_1.privateEncrypt(keyObject, buffer);
+                return [2 /*return*/, encrypted.toString("base64")];
+        }
+    });
+}); };
+/**
+ * @description RsaDecryptWithPublic will accept the encrypted string which will be decrypted using the
+ * public key provided in the second param.
+ * @param toDecrypt
+ * @param relativeOrAbsolutePathtoPublicKey
+ */
+exports.RsaDecryptWithPublic = function (toDecrypt, publicKeyPath) { return __awaiter(_this, void 0, void 0, function () {
+    var absolutePath, publicKey, buffer, decrypted;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                absolutePath = path_1.resolve(publicKeyPath);
+                return [4 /*yield*/, readFileAsync(absolutePath, "utf8")];
+            case 1:
+                publicKey = _a.sent();
+                buffer = Buffer.from(toDecrypt, "base64");
+                decrypted = crypto_1.publicDecrypt(publicKey, buffer);
                 return [2 /*return*/, decrypted.toString("utf8")];
         }
     });

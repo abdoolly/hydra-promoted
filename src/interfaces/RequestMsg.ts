@@ -1,3 +1,5 @@
+import { AppResponse } from "..";
+
 export interface RequestMsg {
     /**
      * @description to which service you want to make the request to
@@ -31,12 +33,6 @@ export interface SecureRequestMsg extends RequestMsg {
      * the public key of the service that we are sending the request to.
      */
     publicKey: string;
-
-    /**
-     * @description this will be the private key that will be used in the decryption the incoming response
-     * usually it will be the private key of the current service
-     */
-    privateKey: RsaKeyObject | string;
 }
 
 export interface ApiResult {
@@ -49,6 +45,32 @@ export interface ApiResult {
 }
 
 export type RsaKeyObject = {
+    /**
+     * @description path to the private key
+     */
     path: string,
+
+    /**
+     * @description passphrase of the private key and it's optional incase the private key does not
+     * need a passphrase
+     */
     passphrase?: string
 };
+
+export interface SecureResponse {
+    /**
+     * @description the body you want to respond with
+     */
+    body: any;
+
+    /**
+     * @description the express response to use to respond back
+     */
+    res: AppResponse;
+
+    /**
+     * @description this should be the private key path or the private key object of the current service
+     */
+    privateKey: RsaKeyObject | string;
+
+}

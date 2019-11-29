@@ -49,7 +49,6 @@ var _this = this;
 Object.defineProperty(exports, "__esModule", { value: true });
 var _1 = require(".");
 var RsaManager_1 = require("./RsaManager");
-var makeApiRequest = _1.Hydra.makeAPIRequest;
 /**
  * @description hydraApiRequest is a function that wraps the hydra makeApiRequest to ease it's use
  * and also acting as a repository.
@@ -58,7 +57,11 @@ var makeApiRequest = _1.Hydra.makeAPIRequest;
 exports.HydraApiRequest = function (object) { return __awaiter(_this, void 0, void 0, function () {
     return __generator(this, function (_a) {
         switch (_a.label) {
-            case 0: return [4 /*yield*/, makeApiRequest(__assign({ from: _1.Hydra.getServiceName() }, object))];
+            case 0:
+                // if body was string an error happens thats why we will handle that 
+                if (typeof object.body === 'string')
+                    object.body = { message: object.body };
+                return [4 /*yield*/, _1.Hydra.makeAPIRequest(__assign({ from: _1.Hydra.getServiceName() }, object))];
             case 1: return [2 /*return*/, _a.sent()];
         }
     });
@@ -70,24 +73,35 @@ exports.HydraApiRequest = function (object) { return __awaiter(_this, void 0, vo
  * @param object SecureRequestMsg
  */
 exports.HydraSecureApiRequest = function (object) { return __awaiter(_this, void 0, void 0, function () {
-    var _a, response, _b;
+    var _a, publicKey, response, _b;
     return __generator(this, function (_c) {
         switch (_c.label) {
             case 0:
-                if (!(object.body && Object.keys(object.body))) return [3 /*break*/, 2];
+                if (!(object.body && Object.keys(object.body).length)) return [3 /*break*/, 2];
                 _a = object;
-                return [4 /*yield*/, RsaManager_1.RsaEncrypt(JSON.stringify(object.body), object.publicKey)];
+                return [4 /*yield*/, RsaManager_1.RsaEncryptWithPublic(JSON.stringify(object.body), object.publicKey)];
             case 1:
                 _a.body = _c.sent();
                 _c.label = 2;
-            case 2: return [4 /*yield*/, exports.HydraApiRequest(object)];
+            case 2:
+                publicKey = object.publicKey;
+                // deleting the private and public key objects before sending 
+                delete object.publicKey;
+                return [4 /*yield*/, exports.HydraApiRequest(object)];
             case 3:
                 response = _c.sent();
                 if (!(response.statusCode === 200)) return [3 /*break*/, 5];
                 _b = response;
-                return [4 /*yield*/, RsaManager_1.RsaDecrypt(response.result, object.privateKey)];
+                return [4 /*yield*/, RsaManager_1.RsaDecryptWithPublic(response.result, publicKey)];
             case 4:
                 _b.result = _c.sent();
+                // handling if the response result was a string the parse will throw an error
+                // so we just need to catch it and do nothing then return as it is
+                // otherwise if it's an object then just parse it to a normal javascript object
+                try {
+                    response.result = JSON.parse(response.result);
+                }
+                catch (err) { }
                 _c.label = 5;
             case 5: return [2 /*return*/, response];
         }
@@ -105,15 +119,42 @@ exports.HandleRsaRequest = function (privateKeyPath) {
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
-                    body = req.body;
-                    return [4 /*yield*/, RsaManager_1.RsaDecrypt(body, privateKeyPath)];
+                    body = req.body.message;
+                    return [4 /*yield*/, RsaManager_1.RsaDecryptWithPrivate(body, privateKeyPath)];
                 case 1:
                     decryptedBody = _a.sent();
                     // replacing the new decrypted body instead of the body
-                    req.body = decryptedBody;
+                    req.body = JSON.parse(decryptedBody);
                     return [2 /*return*/, next()];
             }
         });
     }); };
+};
+/**
+ *
+ * @param object
+ * @param object.body the body you want to respond with
+ * @param object.res the express response
+ * @param object.privateKey this should be the private key path or the private key object
+ */
+exports.SendSecure = function (_a) {
+    var body = _a.body, res = _a.res, privateKey = _a.privateKey;
+    return __awaiter(_this, void 0, void 0, function () {
+        var encryptedBody;
+        return __generator(this, function (_b) {
+            switch (_b.label) {
+                case 0:
+                    if (!(body && Object.keys(body).length))
+                        return [2 /*return*/, body];
+                    // handle of the body was a string we dont need to pass it on JSON.stringify
+                    if (typeof body === 'object')
+                        body = JSON.stringify(body);
+                    return [4 /*yield*/, RsaManager_1.RsaEncryptWithPrivate(body, privateKey)];
+                case 1:
+                    encryptedBody = _b.sent();
+                    return [2 /*return*/, res.sendOk(encryptedBody)];
+            }
+        });
+    });
 };
 //# sourceMappingURL=ApiRequest.js.map

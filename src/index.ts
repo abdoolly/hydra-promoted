@@ -48,7 +48,7 @@ export { DIManager, Controllers, Middlewares, Router };
  * exporting the interfaces that could be needed in the app
  */
 import { UMFMessage } from './interfaces/Hydra.interface';
-import { HydraApiRequest, HydraSecureApiRequest, HandleRsaRequest } from './ApiRequest';
+import { HydraApiRequest, HydraSecureApiRequest, HandleRsaRequest, SendSecure } from './ApiRequest';
 import { RequestMsg, SecureRequestMsg, ApiResult } from './interfaces/RequestMsg';
 import { Req, Res } from './interfaces/ExpressApp.interface';
 
@@ -67,5 +67,6 @@ export {
     RequestMsg,
     SecureRequestMsg,
     ApiResult,
-    HandleRsaRequest
+    HandleRsaRequest,
+    SendSecure
 };

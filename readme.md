@@ -262,37 +262,20 @@ This is the second method which provides secure encrypted requests between the h
 
 #### Example
 
-it's usage is exactly similar to the above method but with additional required fields
-which are the public and private key paths.
+it's usage is exactly similar to the above method but with additional required field
+which is the public key of the service you are going to call.
 
 ```
 let  result  =  await  HydraSecureApiRequest({
 	body:  { message : 'some data' },
 	to:  'serviceName:[method]/path/to/router',
-	publicKey:  './public.pem',
-	privateKey:  './private.pem'
+	publicKey:  './public.pem'
 });
 ```
 
-as you can see it is the same with additional fields the public and private
+as you can see it is the same with the additional field the public key
 
-Sometimes the private key will have a passphrase so , in such a case the private key property will accept an object instead of a string 
-
-#### Example private key with passphrase
-
-```
-let  result  =  await  HydraSecureApiRequest({
-	body:  { message : 'some data' },
-	to:  'serviceName:[method]/path/to/router',
-	publicKey:  './public.pem',
-	privateKey:  {
-		path: './private.pem',
-		passphrase: 'supersecretpassphrase'
-	}
-});
-```
-
-responses from the HydraSecureApiRequest will exactly the same as the above method as it will handle any decryption needed to be done on the responses.
+responses from the HydraSecureApiRequest will be exactly the same as the above method as it will handle any decryption needed to be done on the responses.
 
 ### Handling Hydra Secure request from the receiver side 
 
@@ -310,19 +293,67 @@ app.use(HandleRsaRequest('./private.pem'));
 ```
  as you can see it just requires the private key path or object which will handle all the decryption of the request needed for you and you will then receive a normal request as usual.
 
-also this is how you can use in the middleware that we provide
+
+#### Example private key with passphrase
+
+Sometimes the private key will have a passphrase so , in such a case the private key property will accept an object instead of a string 
 
 ```
 import { HandleRsaRequest } from 'hydra-promoted';
 
-class  HandleRsa  implements  Middleware  {
-	handle(req:  AppRequest,  res:  AppResponse,  next:  Function)  {
-		return  HandleRsaRequest('./private.pem')(req,  res,  next);
-	}
+app.use(HandleRsaRequest({
+		path: './private.pem',
+		passphrase: 'supersecretpassphrase'
+	}));
+```
+
+also this is how you can use in the middleware that we provide
+
+```
+import { HandleRsaRequest, Middleware, AppRequest, AppResponse } from 'hydra-promoted';
+import { injectable } from 'inversify';
+
+@injectable()
+export class HandleRsa implements Middleware {
+    handle(req: AppRequest, res: AppResponse, next: Function) {
+        return HandleRsaRequest('./private.pem')(req, res, next);
+    }
 }
 ```
 
 we are just calling the HandleRsaRequest which will return a middleware and we are just passing it the req , res and next that it needs it.
+
+
+#### How the Receiver will respond an encrpyted response
+
+the sender will be waiting for encrypted response too from the receiver so,
+we need to have a method too to encrypt the receiver response.
+
+```
+import { injectable } from 'inversify';
+import { AppRequest, AppResponse, SendSecure } from 'hydra-promoted';
+
+@injectable()
+class ExampleController{
+
+	securedFunction(req: AppRequest, res: AppResponse) {
+		return SendSecure({
+			body: "This response string will be encrypted",
+			privateKey:{
+				path: './privateKey.pem',
+				passphrase: '123'
+			},
+			res: res
+		});
+	}
+
+}
+```
+
+as the example above this `SendSecure` function will handle all the encryption logic for you
+it just encrypts the response using the private key and the other requesting service will just use 
+the receiving side public key to decrypt it.
+
 
 ## Some Important Helpers
 
@@ -366,7 +397,14 @@ Example
 
 bug fix where the middleware handle functions were losing context of the middleware class 
 
-### 3.1.2
+### 3.1.2 , 3.1.3
 
 bug fix where the controller function error handler catch was not running in the case of a promise 
 function controller now all controller functions are automatically handled
+
+### 3.2.0
+
+- bug fix where HydraApiRequest was not working correctly from the controllers
+- adding a new function for sending an encrypted response back from an encrypted request 
+- hydra does not accept string as body but this is handled inside the hydraMakeRequest function by including that string inside an object with a `message` as key and the string as the value.
+- fixed a bug where encryped and decrypted body were not parsed and they stayed on their string forms

@@ -1,5 +1,5 @@
 import { AppRequest, AppResponse } from ".";
-import { ApiResult, RequestMsg, SecureRequestMsg, RsaKeyObject } from "./interfaces/RequestMsg";
+import { ApiResult, RequestMsg, SecureRequestMsg, RsaKeyObject, SecureResponse } from "./interfaces/RequestMsg";
 /**
  * @description hydraApiRequest is a function that wraps the hydra makeApiRequest to ease it's use
  * and also acting as a repository.
@@ -20,3 +20,11 @@ export declare const HydraSecureApiRequest: (object: SecureRequestMsg) => Promis
  * @returns middleware function
  */
 export declare const HandleRsaRequest: (privateKeyPath: string | RsaKeyObject) => (req: AppRequest, res: AppResponse, next: Function) => Promise<any>;
+/**
+ *
+ * @param object
+ * @param object.body the body you want to respond with
+ * @param object.res the express response
+ * @param object.privateKey this should be the private key path or the private key object
+ */
+export declare const SendSecure: ({ body, res, privateKey }: SecureResponse) => Promise<any>;
