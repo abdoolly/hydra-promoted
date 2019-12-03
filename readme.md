@@ -355,6 +355,41 @@ it just encrypts the response using the private key and the other requesting ser
 the receiving side public key to decrypt it.
 
 
+## Encryption helpers
+
+hydra promoted also provide some helpers for encryption and decryption which ease out the Rsa encryption and decrpytion steps.
+
+#### Rsa Encryption using private key
+
+```
+import { RsaEncryptWithPrivate } from 'hydra-promoted';
+
+let encryptedString = await RsaEncryptWithPrivate("string you want to decrypt","./privatekey/path.pem");
+
+or
+
+let encryptedString = await RsaEncryptWithPrivate("string you want to decrypt",{
+    path: "./privatekey/path.pem",
+    passphrase: process.env.PASS_PHRASE
+})
+
+```
+
+the return result is the encrypted is a promise which resolves to your encrpyted string
+in  a base64 string format
+
+#### Rsa Decryption using public key
+
+```
+import { RsaDecryptWithPublic } from 'hydra-promoted';
+
+let yourString = await RsaDecryptWithPublic(encryptedString,"./publickey/path.pem");
+```
+
+the rsa decrypt just need your encrypted string and the public key path to decrypt 
+
+**NOTE** of course the the public key should be the other key pair for the encryption private key.
+
 ## Some Important Helpers
 
 Now if you were wondering where is the hydra part in this there you go 
@@ -409,6 +444,6 @@ function controller now all controller functions are automatically handled
 - hydra does not accept string as body but this is handled inside the hydraMakeRequest function by including that string inside an object with a `message` as key and the string as the value.
 - fixed a bug where encryped and decrypted body were not parsed and they stayed on their string forms
 
-### 3.2.1
+### 3.2.1,3.2.2
 
 exposed the Rsa encrypt private and decrypt using public functions
