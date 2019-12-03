@@ -51,6 +51,7 @@ import { UMFMessage } from './interfaces/Hydra.interface';
 import { HydraApiRequest, HydraSecureApiRequest, HandleRsaRequest, SendSecure } from './ApiRequest';
 import { RequestMsg, SecureRequestMsg, ApiResult } from './interfaces/RequestMsg';
 import { Req, Res } from './interfaces/ExpressApp.interface';
+import { RsaDecryptWithPublic, RsaEncryptWithPrivate } from './RsaManager';
 
 type AppRequest = Req & Request;
 type AppResponse = Res & Response;
@@ -68,5 +69,7 @@ export {
     SecureRequestMsg,
     ApiResult,
     HandleRsaRequest,
-    SendSecure
+    SendSecure,
+    RsaEncryptWithPrivate,
+    RsaDecryptWithPublic,
 };

@@ -408,3 +408,7 @@ function controller now all controller functions are automatically handled
 - adding a new function for sending an encrypted response back from an encrypted request 
 - hydra does not accept string as body but this is handled inside the hydraMakeRequest function by including that string inside an object with a `message` as key and the string as the value.
 - fixed a bug where encryped and decrypted body were not parsed and they stayed on their string forms
+
+### 3.2.1
+
+exposed the Rsa encrypt private and decrypt using public functions

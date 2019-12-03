@@ -48,4 +48,7 @@ exports.HydraApiRequest = ApiRequest_1.HydraApiRequest;
 exports.HydraSecureApiRequest = ApiRequest_1.HydraSecureApiRequest;
 exports.HandleRsaRequest = ApiRequest_1.HandleRsaRequest;
 exports.SendSecure = ApiRequest_1.SendSecure;
+var RsaManager_1 = require("./RsaManager");
+exports.RsaDecryptWithPublic = RsaManager_1.RsaDecryptWithPublic;
+exports.RsaEncryptWithPrivate = RsaManager_1.RsaEncryptWithPrivate;
 //# sourceMappingURL=index.js.map
