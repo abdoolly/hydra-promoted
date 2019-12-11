@@ -16,7 +16,7 @@
   "dependencies": {
     "fwsp-server-response": "^2.2.6",
     "glob": "^7.1.4",
-    "hydra-promoted-express": "^1.0.2",
+    "hydra-promoted-express": "^1.0.3",
     "inversify-manager": "^1.0.3"
   },
   "devDependencies": {
